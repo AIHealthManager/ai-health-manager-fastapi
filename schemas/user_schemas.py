@@ -1,5 +1,5 @@
-from typing import Optional
-from uuid import UUID, uuid4
+# from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, EmailStr, field_serializer
 
