@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from models.visit_model import VisitModel
 from schemas.visit_schemas import VisitCreate, Visit
@@ -13,3 +14,8 @@ class VisitManager:
         db.add(visit)
         await db.commit()
         return Visit.model_validate(visit)
+
+    @staticmethod
+    async def select_user_visits(user_id: str, db: AsyncSession) -> list[Visit]:
+        visits = (await db.execute(select(VisitModel).where(VisitModel.user_id == UUID(user_id)))).scalars().all()
+        return [Visit.model_validate(visit) for visit in visits]

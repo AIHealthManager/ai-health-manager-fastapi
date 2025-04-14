@@ -18,3 +18,11 @@ async def post_visit(
 ):
     visit = await VisitManager.insert_visit(visit_data, user_id, db)
     return visit
+
+
+@visit_router.get("/user-visits", response_model=list[Visit])
+async def get_user_visits(
+    user_id: str = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)
+):
+    visits = await VisitManager.select_user_visits(user_id, db)
+    return visits
