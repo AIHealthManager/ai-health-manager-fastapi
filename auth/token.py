@@ -20,7 +20,7 @@ credentials_exception = HTTPException(
 
 def create_access_token(user: User) -> str:
     payload = {
-        "sub": user.id,
+        "sub": str(user.id),
         "exp": datetime.now(UTC) + timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS),
     }
     encoded_jwt = jwt.encode(payload, JWT_KEY, algorithm=ALGORITHM)
@@ -36,3 +36,12 @@ def verify_token(token: str = Depends(oauth2_scheme)):
         raise HTTPException(401, "Token is expired")
     except jwt.InvalidTokenError:
         raise HTTPException(401, "Invalid token")
+
+
+def get_current_user_id(token: str = Depends(oauth2_scheme)) -> str:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    return verify_token(token, credentials_exception)
