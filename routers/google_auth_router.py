@@ -3,7 +3,7 @@ from fastapi import APIRouter, status
 from fastapi.responses import RedirectResponse
 from fastapi_sso.sso.google import GoogleSSO
 
-from queries.user_q import insert_user, select_user_by_email
+from managers.user_manager import UserManager
 from schemas.user_schemas import UserCreate
 from auth.token import create_access_token
 from config import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, FRONT_END_GOOGLE_LOGIN_URL
@@ -30,14 +30,14 @@ async def google_login():
 @google_auth_router.get("/callback", tags=["Google SSO"])
 async def google_callback(request: Request):
     user = await google_sso.verify_and_process(request)
-    user_stored = await select_user_by_email(user.email)
+    user_stored = await UserManager.select_user_by_email(user.email)
     if not user_stored:
         user_to_add = UserCreate(
             email=user.email,
             first_name=user.first_name,
             last_name=user.last_name,
         )
-        user_stored = await insert_user(user_to_add)
+        user_stored = await UserManager.insert_user(user_to_add)
     token = create_access_token(user_stored)
     response = RedirectResponse(
         url=f"{FRONT_END_GOOGLE_LOGIN_URL}/google-auth?token={token}",
