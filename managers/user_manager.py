@@ -10,14 +10,14 @@ from schemas.user_schemas import User, UserCreate
 
 class UserManager:
     @staticmethod
-    async def select_user_by_id(
-        user_id: str, db: AsyncSession
-    ) -> User:
-            query_result = await db.execute(select(UserModel).where(UserModel.id == user_id))
-            user = query_result.scalar_one_or_none()
-            if not user:
-                raise NoResultFound("User with that id is not found!")
-            return User.model_validate(user)
+    async def select_user_by_id(user_id: str, db: AsyncSession) -> User:
+        query_result = await db.execute(
+            select(UserModel).where(UserModel.id == user_id)
+        )
+        user = query_result.scalar_one_or_none()
+        if not user:
+            raise NoResultFound("User with that id is not found!")
+        return User.model_validate(user)
 
     @staticmethod
     async def select_user_by_email_or_username(
