@@ -3,19 +3,17 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, field_serializer
 
 
-class VisitBase(BaseModel):
-    visit_date: str
-    doctor_name: str
-    reason: str
-    diagnosis: str
-    notes: str
+class ProfileBase(BaseModel):
+    sex: str
+    birth_data: str
+    blood_type: str
 
 
-class VisitCreate(VisitBase):
+class ProfileData(ProfileBase):
     pass
 
 
-class Visit(VisitBase):
+class Profile(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
