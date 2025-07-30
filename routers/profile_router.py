@@ -36,7 +36,7 @@ async def get_user_profile(
     user_profile = await ProfileManager.select_user_profile(user_id, db)
 
     if not user_profile:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User profile is not found!"
         )
 

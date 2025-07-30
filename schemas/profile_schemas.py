@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, field_serializer
 
 class ProfileBase(BaseModel):
     sex: str
-    birth_data: str
+    birth_date: str
     blood_type: str
 
 
