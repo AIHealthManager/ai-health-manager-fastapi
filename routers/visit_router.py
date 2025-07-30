@@ -24,5 +24,5 @@ async def post_visit(
 async def get_user_visits(
     user_id: str = Depends(get_current_user_id), db: AsyncSession = Depends(get_db)
 ):
-    visits = await VisitManager.select_user_visits(user_id, db)
+    visits = await VisitManager.select_user_visits_by_user_id(user_id, db)
     return visits

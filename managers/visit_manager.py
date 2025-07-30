@@ -18,7 +18,7 @@ class VisitManager:
         return Visit.model_validate(visit)
 
     @staticmethod
-    async def select_user_visits(user_id: str, db: AsyncSession) -> list[Visit]:
+    async def select_user_visits_by_user_id(user_id: str, db: AsyncSession) -> list[Visit]:
         visits = (
             (
                 await db.execute(
