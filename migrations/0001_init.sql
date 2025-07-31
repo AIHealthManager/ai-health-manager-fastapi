@@ -1,7 +1,3 @@
--- Enable UUID extension if not already enabled
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- Create users table
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -14,7 +10,6 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create profiles table
 CREATE TABLE profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -25,27 +20,68 @@ CREATE TABLE profiles (
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create conditions table
 CREATE TABLE conditions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    condition_type VARCHAR NOT NULL,
-    name VARCHAR NOT NULL,
-    affected_area VARCHAR NOT NULL,
-    severity VARCHAR NOT NULL,
+    event_date TIMESTAMP NOT NULL DEFAULT now(),
+    name TEXT NOT NULL,                        
+    severity TEXT,
     description TEXT,
-    created_at TIMESTAMP DEFAULT NOW()
+    outcome TEXT,
+    source TEXT DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT now()
 );
 
--- Create doctor_visits table
 CREATE TABLE doctor_visits (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    visit_date VARCHAR NOT NULL,
-    doctor_name VARCHAR(255),
+    visit_datetime TIMESTAMP NOT NULL,
+    location TEXT,
+    doctor_name TEXT,
+    referred_by TEXT,
     reason TEXT NOT NULL,
-    diagnosis TEXT NOT NULL,
+    observations TEXT,
+    diagnosis TEXT,
+    referred_to TEXT,
+    treatment TEXT,
+    intervention TEXT,
+    user_feedback TEXT,
+    created_at TIMESTAMP DEFAULT now(),
+    updated_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE health_measurements (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id),
+    recorded_at TIMESTAMP NOT NULL DEFAULT now(),
+    measurements TEXT NOT NULL, 
+    context TEXT,
     notes TEXT,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    source TEXT DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE diagnostic_procedures (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    procedure_datetime TIMESTAMP NOT NULL DEFAULT now(),
+    name TEXT NOT NULL,                     
+    type TEXT DEFAULT 'lab',
+    provider TEXT,                         
+    results TEXT,                          
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT now()
+);
+
+CREATE TABLE medication_intakes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    intake_datetime TIMESTAMP NOT NULL DEFAULT now(),
+    medication_name TEXT NOT NULL,         
+    dosage TEXT,                          
+    reason TEXT,                     
+    condition_id UUID REFERENCES conditions(id), 
+    notes TEXT,
+    source TEXT DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT now()
 );

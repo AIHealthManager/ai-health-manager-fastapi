@@ -12,6 +12,17 @@ class ConditionManager:
     async def insert_condition(
         condition_data: ConditionCreate, user_id: str, db: AsyncSession
     ) -> Condition:
+        """
+        Insert a new condition record into the database.
+        
+        Args:
+            condition_data: The condition data to insert
+            user_id: The user's unique identifier
+            db: Database session
+            
+        Returns:
+            The created condition record
+        """
         condition = ConditionModel(**condition_data.model_dump(), user_id=UUID(user_id))
         db.add(condition)
         await db.commit()
@@ -22,6 +33,16 @@ class ConditionManager:
     async def select_user_conditions_by_user_id(
         user_id: str, db: AsyncSession
     ) -> list[Condition]:
+        """
+        Retrieve all conditions for a specific user.
+        
+        Args:
+            user_id: The user's unique identifier
+            db: Database session
+            
+        Returns:
+            List of all conditions for the user
+        """
         conditions = (
             (
                 await db.execute(
@@ -32,3 +53,4 @@ class ConditionManager:
             .all()
         )
         return [Condition.model_validate(condition) for condition in conditions]
+    
