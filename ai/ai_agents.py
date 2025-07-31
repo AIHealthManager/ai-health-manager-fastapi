@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemas.chat_schemas import ChatRequest, ChatResponse, MessageResponse
 from ai.context import AgentContext
-from ai.tools import create_visit, report_condition
+from ai.tools import tools
 
 
 async def process_text_message(chat_req: ChatRequest, db: AsyncSession, user_id: str) -> ChatResponse:
@@ -39,7 +39,7 @@ Your responsibilities include:
 
 Use your tools only when you have sufficient and structured information. Do not make assumptions or store fabricated data.
     """,
-    tools=[create_visit, report_condition]
+    tools=tools
     )
 
     conversation_id = chat_req.conversation_id if chat_req.conversation_id else str(uuid4())

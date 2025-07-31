@@ -258,3 +258,6 @@ async def record_medication_intake(
         wrapper.context.user_id,
         wrapper.context.db
     )
+
+
+tools = [record_medication_intake, record_diagnostic_procedure, record_doctor_visit, record_health_measurement, report_condition]
