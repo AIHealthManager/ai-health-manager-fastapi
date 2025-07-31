@@ -1,7 +1,7 @@
 from uuid import UUID
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, field_serializer
+from pydantic import BaseModel, ConfigDict, field_serializer, field_validator
 
 
 class ConditionBase(BaseModel):
@@ -16,6 +16,14 @@ class ConditionCreate(ConditionBase):
     """Schema for creating a new condition record."""
     event_date: datetime | None = None  # Optional, defaults to now() in DB
     source: str = "user"  # Defaults to "user" but can be overridden
+
+    @field_validator("event_date", mode="after")
+    @classmethod
+    def strip_timezone(cls, v: datetime | None) -> datetime | None:
+        if isinstance(v, datetime) and v.tzinfo is not None:
+            return v.replace(tzinfo=None)
+        return v
+
 
 
 class Condition(ConditionBase):

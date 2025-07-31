@@ -1,3 +1,5 @@
+from datetime import datetime, UTC
+
 from agents import function_tool, RunContextWrapper
 
 from ai.context import AgentContext
@@ -119,7 +121,7 @@ async def report_condition(
             - severity (optional): "mild", "moderate", "severe", or custom description
             - description (optional): Additional context, symptoms, or details
             - outcome (optional): Current status like "resolved", "ongoing", "improved", "worsened"
-            - event_date (optional): When the condition occurred/was noticed (defaults to now)
+            - event_date (optional): When the condition occurred/was noticed - timestamp without timezone (defaults to now)
             - source (optional): Who reported it - "user", "doctor", "device" (defaults to "user")
 
     Returns:
@@ -260,4 +262,10 @@ async def record_medication_intake(
     )
 
 
-tools = [record_medication_intake, record_diagnostic_procedure, record_doctor_visit, record_health_measurement, report_condition]
+@function_tool
+async def get_real_current_datetime():
+    """Return current datetime UTC now in ISO format"""
+    return datetime.now(UTC).isoformat()
+    
+
+tools = [record_medication_intake, record_diagnostic_procedure, record_doctor_visit, record_health_measurement, report_condition, get_real_current_datetime]

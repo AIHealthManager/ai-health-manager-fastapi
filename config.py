@@ -22,4 +22,4 @@ GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 
 FRONT_END_GOOGLE_LOGIN_URL = environ.get("FRONT_END_GOOGLE_LOGIN_URL")
 
-GOOGLE_CALLBACK_URL = environ.get("GOOGLE_CALLBACK_URL", "http://localhost:8000/auth/callback")
+GOOGLE_CALLBACK_URL = environ.get("GOOGLE_CALLBACK_URL", "http://localhost:8000/google-auth/callback")

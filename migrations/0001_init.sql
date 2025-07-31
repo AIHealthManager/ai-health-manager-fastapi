@@ -24,7 +24,7 @@ CREATE TABLE conditions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     event_date TIMESTAMP NOT NULL DEFAULT now(),
-    name TEXT NOT NULL,                        
+    name TEXT NOT NULL,
     severity TEXT,
     description TEXT,
     outcome TEXT,
