@@ -10,8 +10,14 @@ from managers.diagnostic_procedure_manager import DiagnosticProcedureManager
 from managers.medication_intake_manager import MedicationIntakeManager
 from schemas.visit_schemas import VisitCreate, Visit, VisitUpdate
 from schemas.condition_schemas import ConditionCreate, Condition
-from schemas.health_measurement_schemas import HealthMeasurement, HealthMeasurementCreate
-from schemas.diagnostic_procedure_schemas import DiagnosticProcedureCreate, DiagnosticProcedure
+from schemas.health_measurement_schemas import (
+    HealthMeasurement,
+    HealthMeasurementCreate,
+)
+from schemas.diagnostic_procedure_schemas import (
+    DiagnosticProcedureCreate,
+    DiagnosticProcedure,
+)
 from schemas.medication_intake_schemas import MedicationIntake, MedicationIntakeCreate
 
 
@@ -48,15 +54,13 @@ async def record_doctor_visit(
 
     Returns:
         DoctorVisit: The stored visit record with unique ID, timestamps, and all provided medical data.
-        
+
     Raises:
         DatabaseError: If the visit record cannot be saved to the database.
         ValidationError: If required fields are missing or invalid.
     """
     return await VisitManager.insert_doctor_visit(
-        visit_data, 
-        wrapper.context.user_id, 
-        wrapper.context.db
+        visit_data, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -85,16 +89,13 @@ async def update_doctor_visit_details(
 
     Returns:
         DoctorVisit: The updated visit record, or None if the visit was not found.
-        
+
     Raises:
         DatabaseError: If the update cannot be performed.
         PermissionError: If the user doesn't own the visit record being updated.
     """
     return await VisitManager.update_doctor_visit(
-        visit_id,
-        visit_updates,
-        wrapper.context.user_id, 
-        wrapper.context.db
+        visit_id, visit_updates, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -106,7 +107,7 @@ async def report_condition(
     """
     Records a user-reported health condition, symptom, injury, or illness.
 
-    This tool captures health events with their timing, severity, and context. Use it when users 
+    This tool captures health events with their timing, severity, and context. Use it when users
     report any health-related issues, from minor symptoms to significant medical events.
 
     Examples of when to use:
@@ -126,14 +127,12 @@ async def report_condition(
 
     Returns:
         Condition: The stored condition record with unique ID, timestamps, and all provided data.
-        
+
     Raises:
         DatabaseError: If the condition cannot be saved to the database.
     """
     return await ConditionManager.insert_condition(
-        condition_data, 
-        wrapper.context.user_id, 
-        wrapper.context.db
+        condition_data, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -165,15 +164,13 @@ async def record_health_measurement(
 
     Returns:
         HealthMeasurement: The stored measurement record with unique ID, timestamps, and all provided data.
-        
+
     Raises:
         DatabaseError: If the measurement cannot be saved to the database.
         ValidationError: If required measurement data is missing or invalid.
     """
     return await HealthMeasurementManager.insert_health_measurement(
-        measurement_data,
-        wrapper.context.user_id,
-        wrapper.context.db
+        measurement_data, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -207,15 +204,13 @@ async def record_diagnostic_procedure(
 
     Returns:
         DiagnosticProcedure: The stored procedure record with unique ID, timestamps, and all provided medical data.
-        
+
     Raises:
         DatabaseError: If the procedure record cannot be saved to the database.
         ValidationError: If required procedure information is missing or invalid.
     """
     return await DiagnosticProcedureManager.insert_diagnostic_procedure(
-        procedure_data,
-        wrapper.context.user_id,
-        wrapper.context.db
+        procedure_data, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -249,16 +244,14 @@ async def record_medication_intake(
 
     Returns:
         MedicationIntake: The stored intake record with unique ID, timestamps, and all provided medication data.
-        
+
     Raises:
         DatabaseError: If the medication intake cannot be saved to the database.
         ValidationError: If required medication information is missing or invalid.
         ReferenceError: If condition_id is provided but the condition doesn't exist or belong to the user.
     """
     return await MedicationIntakeManager.insert_medication_intake(
-        intake_data,
-        wrapper.context.user_id,
-        wrapper.context.db
+        intake_data, wrapper.context.user_id, wrapper.context.db
     )
 
 
@@ -266,6 +259,13 @@ async def record_medication_intake(
 async def get_real_current_datetime():
     """Return current datetime UTC now in ISO format"""
     return datetime.now(UTC).isoformat()
-    
 
-tools = [record_medication_intake, record_diagnostic_procedure, record_doctor_visit, record_health_measurement, report_condition, get_real_current_datetime]
+
+tools = [
+    record_medication_intake,
+    record_diagnostic_procedure,
+    record_doctor_visit,
+    record_health_measurement,
+    report_condition,
+    get_real_current_datetime,
+]
