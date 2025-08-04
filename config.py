@@ -23,3 +23,9 @@ GOOGLE_CLIENT_SECRET = environ["GOOGLE_CLIENT_SECRET"]
 FRONT_END_GOOGLE_LOGIN_URL = environ.get("FRONT_END_GOOGLE_LOGIN_URL")
 
 GOOGLE_CALLBACK_URL = environ.get("GOOGLE_CALLBACK_URL", "http://localhost:8000/google-auth/callback")
+
+MONGO_USER = environ.get("MONGO_USER")
+MONGO_PASS = environ.get("MONGO_PASS")
+MONGO_URI = environ.get("MONGO_URI")
+MONGO_APP = environ.get("MONGO_APP")
+MONGO_DB = environ["MONGO_DB"]

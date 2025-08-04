@@ -1,12 +1,14 @@
 
 from uuid import uuid4
 
-from agents import Agent, Runner, SQLiteSession
+from agents import Agent, Runner
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from schemas.chat_schemas import ChatRequest, ChatResponse, MessageResponse
 from ai.context import AgentContext
 from ai.tools import tools
+from mongodb_session import MongoDBSession
+from no_sql_db import db as nosql_db
 
 
 async def process_text_message(chat_req: ChatRequest, db: AsyncSession, user_id: str) -> ChatResponse:
@@ -39,12 +41,13 @@ Your responsibilities include:
 
 Use your tools only when you have sufficient and structured information. Do not make assumptions or store fabricated data.
     """,
-    tools=tools
+    tools=tools,
+    # model="gpt-4.1-2025-04-14",
     )
 
     conversation_id = chat_req.conversation_id if chat_req.conversation_id else str(uuid4())
 
-    session = SQLiteSession(conversation_id, "conversation_history.db")
+    session = MongoDBSession(conversation_id, nosql_db)
 
     agent_context = AgentContext(
         db=db,
